@@ -1,3 +1,24 @@
+<?php
+    session_start();
+    require_once __DIR__."/dbclass.php";
+
+    if (empty($_SESSION['CSRF'])) {
+        $_SESSION['CSRF'] = bin2hex(random_bytes(32));
+    }
+    $CSRF = $_SESSION['CSRF'];
+    $connect = new Dbclass('localhost','postgres','saw','27.6');
+    $pdo_connect = $connect->getConnect();
+        if(!empty($_COOKIE['remember'])){
+                $sql = 'select coockie from users where coockie = :coockie';
+                $stmt = $pdo_connect->prepare($sql);
+                $stmt->execute(['coockie'=>$_COOKIE['remember']]);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if(!empty($row)){
+                    header('Location: index.php');
+                    exit();
+                }
+            }
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -16,6 +37,9 @@
             <form action="/php/login.php" method="POST">
                 <input type="email" id="login_email" name="email" placeholder="Email" required>
                 <input type="password" id="login_password" name="password" placeholder="Пароль" required>
+                <input type="hidden" name="token" value="<?php echo $token;?>"> <br/>
+                <input type="checkbox" name="remember" value="value1">
+                запомнить меня
                 <button type="submit">Войти</button>
             </form>
             <button class="oauth-btn">Войти через Google</button>
