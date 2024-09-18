@@ -4,6 +4,12 @@ session_start();
 ini_set('display_errors', 'on');
 require_once 'dbclass.php';
 require_once 'oauthconfig.php';
+require_once 'loggerconfig.php';
+if(!empty($_COOKIE['remember'])){
+        $infolog->info("пользователь вошел с coockie");
+        header('Location: index.php');
+        exit();
+}
 $db = new Dbclass('localhost','postgres','saw','27.6');
 
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
@@ -45,10 +51,10 @@ if (!$user) {
             $sql = 'insert into user_roles (user_id, role_id) values(:user_id ,1)';
             $stmt = $db->getConnect()->prepare($sql);
             $stmt->execute(['user_id'=>$user_id]);
-
 } else {
     // Если пользователь существует, проверяем его тип авторизации
     if ($user['auth_type'] !== 'oauth') {
+        $warlog->warning("пользователь с email ".$email." уже существует");
         // Если это не OAuth-пользователь, можно вывести ошибку или объединить аккаунты
         header("Location: auth.php");
         exit();
@@ -57,6 +63,7 @@ if (!$user) {
 
 // Шаг 3: Авторизуем пользователя в системе (установка сессии, редирект и т.д.)
 $_SESSION['email'] = $user['email'];
+$infolog->info("пользователь с email ".$email." авторизован с помощью OAuth");
 header("Location: index.php");
 exit();
 ?>

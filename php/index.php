@@ -21,8 +21,8 @@ $role = $stmt->fetchColumn();
 
 // Отображение кнопки в зависимости от роли
 if ($role === 'oauth') {
-    echo '<button type="button" id="action">Действие только для Админа</button>';
+    echo '<img src="../images/meme.jpg" </img> <p>привет пользователь oauth</p>';
 } else {
-    echo '<button disabled>вы не админ</button>';
+    echo '<p>привет пользователь</p>';
 }
 ?>
