@@ -7,7 +7,7 @@
         $_SESSION['CSRF'] = bin2hex(random_bytes(32));
     }
     $CSRF = $_SESSION['CSRF'];
-    $connect = new Dbclass('localhost','postgres','saw','27.6');
+    $connect = new Dbclass('localhost','postgres','27.6');
     $pdo_connect = $connect->getConnect();
         if(!empty($_COOKIE['remember'])){
                 $sql = 'select coockie from users where coockie = :coockie';

@@ -3,7 +3,7 @@ session_start();
 ini_set('display_errors', 'on');
 require_once __DIR__ ."/dbclass.php";
 
-$connect = new Dbclass('localhost','postgres','saw','27.6');
+$connect = new Dbclass('localhost','postgres','27.6');
 $pdo_connect = $connect->getConnect();
 
 // Запрос для получения роли пользователя

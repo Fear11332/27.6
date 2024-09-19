@@ -12,7 +12,7 @@
         exit();
     }
     if ($submitted_token === $session_token) {
-            $connect = new Dbclass('localhost','postgres','saw','27.6');
+            $connect = new Dbclass('localhost','postgres','27.6');
             $pdo_connect = $connect->getConnect();
             if(!empty($_POST['email'] && !empty($_POST['password']))){  
                 $sql = 'select email,password from users where email = :email';

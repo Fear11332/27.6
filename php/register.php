@@ -11,7 +11,7 @@ if(!empty($_COOKIE['remember'])){
 }
 
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
-    $connect = new Dbclass('localhost', 'postgres', 'saw', '27.6');
+    $connect = new Dbclass('localhost', 'postgres', '27.6');
     $pdo_connect = $connect->getConnect();
     
     // Проверяем, существует ли email в таблице пользователей

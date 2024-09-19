@@ -10,7 +10,7 @@ if(!empty($_COOKIE['remember'])){
         header('Location: index.php');
         exit();
 }
-$db = new Dbclass('localhost','postgres','saw','27.6');
+$db = new Dbclass('localhost','postgres','27.6');
 
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
         

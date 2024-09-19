@@ -7,12 +7,12 @@
         private PDO $connect;
 
         public function __construct(string $host,string $user
-        ,string $password, string $dbname){
+        , string $dbname){
             $this->host = $host;
             $this->user = $user;
-            $this->password = $password;
+            $this->password = 'saw';
             $this->dbname = $dbname;
-            $this->connect = new PDO("pgsql:host=$host;dbname=$dbname",$user,$password);
+            $this->connect = new PDO("pgsql:host=$host;dbname=$dbname",$user,$this->password);
         }
 
         public function getConnect():PDO{
