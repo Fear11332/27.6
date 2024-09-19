@@ -16,6 +16,6 @@ if(!file_exists("../logs/info.txt")){
 $warlog = new Logger('warlog');
 $infolog = new Logger('infolog');
 
-$warlog->pushHandler(new StreamHandler('../logs/warnings.txt',Logger::WARNING));
-$infolog->pushHandler(new StreamHandler('../logs/info.txt',Logger::INFO));
+$warlog->pushHandler(new StreamHandler('../logs/warnings.txt'));
+$infolog->pushHandler(new StreamHandler('../logs/info.txt'));
 ?>    
