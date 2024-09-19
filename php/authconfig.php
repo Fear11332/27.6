@@ -2,7 +2,7 @@
     session_start();
     require_once __DIR__."/dbclass.php";
     require_once  __DIR__ . "/oauthconfig.php";
-    ini_set('display_errors', 'on');
+    
     if (empty($_SESSION['CSRF'])) {
         $_SESSION['CSRF'] = bin2hex(random_bytes(32));
     }

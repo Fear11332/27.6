@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once __DIR__ . "/dbclass.php";
-ini_set('display_errors', 'on');
 require_once __DIR__ . "/loggerconfig.php";
 
 if(!empty($_COOKIE['remember'])){

@@ -1,7 +1,6 @@
 <?php
 session_start();
 // Подключение к базе данных
-ini_set('display_errors', 'on');
 require_once 'dbclass.php';
 require_once 'oauthconfig.php';
 require_once 'loggerconfig.php';

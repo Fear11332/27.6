@@ -1,6 +1,5 @@
 <?php
 session_start();
-ini_set('display_errors', 'on');
 require_once __DIR__ ."/dbclass.php";
 
 $connect = new Dbclass('localhost','postgres','27.6');

@@ -1,7 +1,6 @@
 <?php
     require_once __DIR__ . "/dbclass.php";
     session_start();
-    ini_set('display_errors','on');
     require_once "loggerconfig.php";
 
     $submitted_token = $_POST['CSRF'] ?? '';
