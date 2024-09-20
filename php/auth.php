@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Авторизация и Регистрация</title>
-    <link rel="stylesheet" href="/CSS/style.css"> <!-- Подключаем внешний CSS файл -->
-    <script src="/JS/auth_js.js"></script>
+    <link rel="stylesheet" href="../CSS/style.css"> <!-- Подключаем внешний CSS файл -->
+    <script src="../JS/auth_js.js"></script>
 </head>
 <body>
 

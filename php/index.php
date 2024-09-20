@@ -2,6 +2,11 @@
 session_start();
 require_once __DIR__ ."/dbclass.php";
 
+if(empty($_SESSION['email'])){
+    header("Location: auth.php");
+    exit();
+}
+
 $connect = new Dbclass('localhost','postgres','27.6');
 $pdo_connect = $connect->getConnect();
 

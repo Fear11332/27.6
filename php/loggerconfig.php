@@ -4,6 +4,9 @@ require_once "../vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+if(!is_dir("../logs"))
+    mkdir("../logs",0777,true);
+
 if(!file_exists("../logs/warnings.txt")){
     $handle = fopen("../logs/warnings.txt","c");
     fclose($handle);
