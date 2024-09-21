@@ -19,3 +19,5 @@
             return $this->connect;
         }
     }
+    $connect = new Dbclass('localhost','postgres','27.6');
+    $pdo_connect = $connect->getConnect();

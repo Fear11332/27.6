@@ -2,16 +2,14 @@
     session_start();
     require_once __DIR__."/dbclass.php";
     require_once  __DIR__ . "/oauthconfig.php";
+    require_once __DIR__ ."/sqlqueryclass.php";
     
     if (empty($_SESSION['CSRF'])) {
         $_SESSION['CSRF'] = bin2hex(random_bytes(32));
     }
-    $CSRF = $_SESSION['CSRF'];
-    $connect = new Dbclass('localhost','postgres','27.6');
-    $pdo_connect = $connect->getConnect();
+    $CSRF = $_SESSION['CSRF']; 
         if(!empty($_COOKIE['remember'])){
-                $sql = 'select coockie from users where coockie = :coockie';
-                $stmt = $pdo_connect->prepare($sql);
+                $stmt = $pdo_connect->prepare(Query::getCoockieSQL());
                 $stmt->execute(['coockie'=>$_COOKIE['remember']]);
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if(!empty($row)){

@@ -1,7 +1,8 @@
 <?php
-    require_once __DIR__ . "/dbclass.php";
     session_start();
-    require_once "loggerconfig.php";
+    require_once __DIR__ . "/dbclass.php";
+    require_once __DIR__."/loggerconfig.php";
+    require_once __DIR__ ."/sqlqueryclass.php";
 
     $submitted_token = $_POST['CSRF'] ?? '';
     $session_token = $_SESSION['CSRF'] ?? '';
@@ -11,11 +12,8 @@
         exit();
     }
     if ($submitted_token === $session_token) {
-            $connect = new Dbclass('localhost','postgres','27.6');
-            $pdo_connect = $connect->getConnect();
             if(!empty($_POST['email'] && !empty($_POST['password']))){  
-                $sql = 'select email,password from users where email = :email';
-                $stmt = $pdo_connect->prepare($sql);
+                $stmt = $pdo_connect->prepare(Query::getEmailPassword());
                 $stmt->execute(['email'=>$_POST['email']]);
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if(!empty($row)){
@@ -24,8 +22,7 @@
                         if(isset($_POST['remember']) && !isset($_COOKIE['remember'])){
                             $coockieHash = password_hash($_POST['password'],PASSWORD_DEFAULT);
                             setcookie('remember',$coockieHash,time()+3600);
-                            $sql = 'update users set coockie = :coockie where email = :email';
-                            $stmt = $pdo_connect->prepare($sql);
+                            $stmt = $pdo_connect->prepare(Query::updateCoockieSQL());
                             $stmt->execute(['coockie'=>$coockieHash,'email'=>$_POST['email']]);
                             $infolog->info("для пользователя с email ".$_POST['email']." были устновлены coockie");
                         }

@@ -1,15 +1,17 @@
 <?php
+
 session_start();
 // Подключение к базе данных
-require_once 'dbclass.php';
-require_once 'oauthconfig.php';
-require_once 'loggerconfig.php';
+require_once __DIR__.'/dbclass.php';
+require_once __DIR__.'/oauthconfig.php';
+require_once __DIR__.'/loggerconfig.php';
+require_once __DIR__ ."/sqlqueryclass.php";
+
 if(!empty($_COOKIE['remember'])){
         $infolog->info("пользователь вошел с coockie");
         header('Location: index.php');
         exit();
 }
-$db = new Dbclass('localhost','postgres','27.6');
 
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
         
@@ -25,30 +27,27 @@ $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
     $oauth_id = $google_user_info->id;
 
 // Шаг 2: Проверяем, есть ли пользователь в базе по email
-$user_stmt = $db->getConnect()->prepare("SELECT id, email, password, auth_type FROM users WHERE email = :email");
+$user_stmt = $pdo_connect->prepare(Query::getOAuthUserType());
 $user_stmt->execute(['email' => $email]);
 $user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     // Если пользователя нет, регистрируем его в базе данных с пустым паролем и типом авторизации 'oauth'
-    $user_insert_stmt = $db->getConnect()->prepare("INSERT INTO users (email, password, auth_type) VALUES (:email, '', 'oauth') RETURNING id");
+    $user_insert_stmt = $pdo_connect->prepare(Query::insertUserWithAuthType());
     $user_insert_stmt->execute(['email' => $email]);
     $user_id = $user_insert_stmt->fetch(PDO::FETCH_ASSOC)['id'];
 
     // Добавляем информацию в таблицу oauth_users
-    $oauth_user_stmt = $db->getConnect()->prepare("INSERT INTO oauth_users (user_id, provider_id, oauth_id) VALUES (:user_id, :provider_id, :oauth_id)");
+    $oauth_user_stmt = $pdo_connect->prepare(Query::insertOAuthUser());
     $oauth_user_stmt->execute([
         'user_id' => $user_id,
         'provider_id' => 1, // ID провайдера (например, Google)
         'oauth_id' => $oauth_id
     ]);
-
-    $sql = 'select id from users where email = :email';
-            $stmt = $db->getConnect()->prepare($sql);
+            $stmt = $pdo_connect->prepare(Query::selectIdFromUsers());
             $stmt->execute(['email'=>$email]);
             $user_id = $stmt->fetchColumn();
-            $sql = 'insert into user_roles (user_id, role_id) values(:user_id ,1)';
-            $stmt = $db->getConnect()->prepare($sql);
+            $stmt = $pdo_connect->prepare(Query::insertIntoUserRoles());
             $stmt->execute(['user_id'=>$user_id]);
 } else {
     // Если пользователь существует, проверяем его тип авторизации

@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . "/dbclass.php";
 require_once __DIR__ . "/loggerconfig.php";
+require_once __DIR__ . "/sqlqueryclass.php";
 
 if(!empty($_COOKIE['remember'])){
         $infolog->info("пользователь вошел с coockie");
@@ -10,34 +11,27 @@ if(!empty($_COOKIE['remember'])){
 }
 
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
-    $connect = new Dbclass('localhost', 'postgres', '27.6');
-    $pdo_connect = $connect->getConnect();
-    
-    // Проверяем, существует ли email в таблице пользователей
-    $sql = 'SELECT * FROM users WHERE email = :email';
-    $stmt = $pdo_connect->prepare($sql);
+      // Проверяем, существует ли email в таблице пользователей
+    $stmt = $pdo_connect->prepare(Query::selectAllInfoFromUsers());
     $stmt->execute(['email' => $_POST['email']]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (empty($row)) {
         // Если email не существует, регистрируем нового пользователя
         $_SESSION['email'] = $_POST['email'];
-        $sql = 'INSERT INTO users (email, password) VALUES (:email, :password)';
-        $stmt = $pdo_connect->prepare($sql);
+        $stmt = $pdo_connect->prepare(Query::insertUser());
         $stmt->execute([
             'email' => $_POST['email'],
             'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
         ]);
         
         // Получаем ID нового пользователя
-        $sql = 'SELECT id FROM users WHERE email = :email';
-        $stmt = $pdo_connect->prepare($sql);
+        $stmt = $pdo_connect->prepare(Query::selectIdFromUsers());
         $stmt->execute(['email' => $_POST['email']]);
         $user_id = $stmt->fetchColumn();
         
         // Присваиваем роль новому пользователю
-        $sql = 'INSERT INTO user_roles (user_id, role_id) VALUES (:user_id, 2)';
-        $stmt = $pdo_connect->prepare($sql);
+        $stmt = $pdo_connect->prepare(Query::insertSimpleUser());
         $stmt->execute(['user_id' => $user_id]);
         $infolog->info("пользователь с email ".$_POST['email']." зарегестрировался");
         header("Location: index.php");

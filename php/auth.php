@@ -1,5 +1,5 @@
 <?php   
-    require_once 'authconfig.php';
+    require_once __DIR__.'/authconfig.php';
 ?>
 <!DOCTYPE html>
 <html lang="ru">
